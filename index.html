@@ -6,7 +6,7 @@
 @media(prefers-color-scheme:dark){:root{--bg:#111827;--card:#1f2937;--tx:#e5e7eb;--bd:#374151}}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif}
 .app{display:flex;gap:16px;padding:16px;align-items:flex-start}
-.panel{width:340px;flex:none;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+.panel{width:330px;flex:none;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
 h1{font-size:17px;margin:0 0 12px}label{display:block;font-size:12px;margin:10px 0 3px;opacity:.8}
 input{width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:transparent;color:inherit;font:15px "Noto Sans Gujarati",Shruti,sans-serif}
 .btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
@@ -14,51 +14,79 @@ button{flex:1;padding:10px;border:0;border-radius:8px;background:var(--ac);color
 button.s{background:transparent;color:var(--tx);border:1px solid var(--bd)}
 .hint{font-size:12px;opacity:.7;margin-top:10px;line-height:1.5}
 .pages{flex:1;min-width:0;overflow-x:auto}
-.page{background:#fff;color:#000;width:794px;min-height:1123px;margin:0 auto 16px;padding:50px 60px;font:15px/1.75 "Noto Sans Gujarati",Shruti,"Nirmala UI",sans-serif;box-shadow:0 2px 8px #0003}
-.page [contenteditable]:focus{outline:none}
-.c{text-align:center}.t{font-size:26px;font-weight:700;line-height:1.3}
-hr{border:0;border-top:3px double #000;margin:8px 0}
-.row{display:flex;justify-content:space-between}
-.vs{margin:14px 0 14px 90px;text-indent:-0px}.vs div{padding-left:0}
-.pad{text-align:justify;text-indent:50px}ul{margin:6px 0;padding-left:40px;text-align:justify}
-.sig{text-align:center;width:230px;margin-left:auto;line-height:1.5}
+.page{background:#fff;color:#000;width:8.5in;height:14in;overflow:hidden;margin:0 auto 16px;padding:.9in 9.2% .5in;font:12pt/1.5 "Noto Sans Gujarati",Shruti,"Nirmala UI",sans-serif;box-shadow:0 2px 8px #0003}
+.p{min-height:1.5em;overflow-wrap:anywhere}.gap{min-height:1.5em}
+.row{display:flex;justify-content:space-between}.row .cell:last-child{margin-left:auto}
+.bu{display:inline-block;width:1.35em;text-indent:0}
+.rule{border-bottom:3px double #000;height:6px;min-height:0;margin:6px 0 10px}
+.em{text-decoration:underline;color:#0563c1}
 span[data-k]{background:#fff6b8;border-radius:3px}
-@media print{body{background:#fff}.panel{display:none}.app{display:block;padding:0}.pages{overflow:visible}.page{box-shadow:none;margin:0;width:auto;page-break-after:always}span[data-k]{background:none}@page{size:A4;margin:0}}
+[contenteditable]:focus{outline:none}
+@page{size:8.5in 14in;margin:0}
+@media print{body{background:#fff}.panel{display:none}.app{display:block;padding:0}.pages{overflow:visible}.page{box-shadow:none;margin:0;page-break-after:always}span[data-k]{background:none}}
 @media(max-width:1000px){.app{flex-direction:column}.panel{position:static;width:100%;max-height:none}}
 </style></head><body>
 <div class="app">
 <div class="panel"><h1>ફેરફાર થતી વિગતો</h1><div id="form"></div>
 <div class="btns"><button onclick="dl()">Word ડાઉનલોડ</button><button onclick="print()">PDF ડાઉનલોડ</button><button class="s" onclick="reset()">ડિફોલ્ટ</button></div>
-<div class="hint">• અહીં ભરો કે જમણી બાજુ પીળા ભાગમાં સીધું લખો, બધે આપોઆપ બદલાશે.<br>• બાકીનું લખાણ પણ ક્લિક કરી સીધું એડિટ કરી શકાય.<br>• PDF: Print વિન્ડોમાં "Save as PDF" પસંદ કરો.<br>• તારીખ/નંબરના અંકો આપોઆપ ગુજરાતી થશે.</div></div>
+<div class="hint">• અહીં ભરો કે જમણી બાજુ પીળા ભાગમાં સીધું લખો, બધે આપોઆપ બદલાશે.<br>• બાકીનું લખાણ પણ ક્લિક કરી સીધું એડિટ કરી શકાય.<br>• PDF: Print વિન્ડોમાં "Save as PDF" (પેપર: Legal) પસંદ કરો.<br>• તારીખ/નંબરના અંકો આપોઆપ ગુજરાતી થશે.</div></div>
 <div class="pages" id="doc"></div></div>
 <script>
 const F=[["date","તારીખ (પત્રની)","૦૯/૦૯/૨૦૨૬",1],["reg","માપણી રજીસ્ટર ક્રમાંક","૦૧/ILR/૦૧/૦૪/૨૦૨૫-૨૬",1],["village","અરજદારનું ગામ (મોજે)","ડોણ"],["gvillage","સરકારી જમીનનું ગામ (મોજે)","ડોણ"],["own","અરજદારનો સ.નં.","સ.નં.૫૨૨"],["gov","સરકારી સ.નં.","સ.નં.૪૫૦/પૈકી"],["area","ક્ષેત્રફળ","એ.૦.૦૨ ગું."],["a1","અરજદારનું નામ અને સરનામું","રાયમા રજાક જુસબ રહે. ડોણ"],["lno","આપશ્રીના પત્ર નં.","MKMO/0010/05/2026/2438"],["ldt","પત્રની તારીખ","૨૬/૦૬/૨૦૨૬",1],["sd","સર્વેયરશ્રીના અહેવાલની તારીખ","૦૪/૦૮/૨૦૨૬",1]];
 const D={};F.forEach(f=>D[f[0]]=f[2]);let S={...D};
-try{Object.assign(S,JSON.parse(localStorage.getItem("ll")||"{}"))}catch(e){}
+try{const o=JSON.parse(localStorage.getItem("ll")||"{}");F.forEach(f=>{if(o[f[0]])S[f[0]]=o[f[0]]})}catch(e){}
 const g=s=>s.replace(/[0-9]/g,d=>"૦૧૨૩૪૫૬૭૮૯"[d]);
 const k=n=>`<span data-k="${n}" contenteditable="true"></span>`;
-const head=`<div class="c t">જમીન દફતર નિરીક્ષકની કચેરી,માંડવી</div><div class="c">પ્રથમ માળ,મામલતદાર કચેરી,માંડવી મુ.માંડવી,જિ.કચ્છ-૩૬૦૪૬૫<br>e-mail :- ilr-mandvi-kut@gujarat.gov.in</div><hr>`;
-const vs=a=>`<div class="vs">વિષય : મોજે-${k("village")},તા-માંડવી-કચ્છના ${k("own")} જમીન પીયત કરવા માટે મોજે-${k("gvillage")} તા-માંડવીના સરકારી ${k("gov")}ની જમીનમાંથી ${k("area")} કૂવા તથા ધોરીયાના હેતુ મળવા બાબત.<br>${a}<br>સંદર્ભ :(૧)આપશ્રીના પત્રનં.${k("lno")} તા: ${k("ldt")}.<br>(૨)સર્વેયરશ્રી નો તા-${k("sd")} નો અહેવાલ</div>`;
-const intro=`સવિનય ઉપરોક્ત વિષય પરત્વે જણાવવાનું કે મોજે-${k("village")},તા-માંડવી-કચ્છના ${k("own")} જમીન પીયત કરવા માટે મોજે-${k("gvillage")} તા-માંડવીના સરકારી ${k("gov")}ની જમીનમાંથી ${k("area")} તથા ધોરીયાના હેતુ મળવા બાબતે સંદર્ભ(૧)થી અહેવાલ માગેલ જે બાબતે અરજદારશ્રી દ્વારા અત્રેની કચેરીએ માપણી ફી ભરતાં કેસ અત્રેના માપણી રજીસ્ટર ક્રમાંક ${k("reg")} થી નોંધણી કરી સર્વેયરશ્રી એસ.પી.જોષીને માપણી માટે ફાળવણી કરવામાં આવેલ જેમાં સર્વેયરશ્રીએ સર્કલ ઓફિસરશ્રી દ્વારા સુચિત કરેલ જગ્યાની અરજદારશ્રીની હાજરીમાં માપણી કરેલ જે માપણીશીટ તથા અહેવાલ સંદર્ભ (૨)થી રજૂ કરેલ છે `;
-const L=(t1,t2,t3,t4)=>`<ul><li>${t1}</li><li>${t2}</li><li>${t3}</li><li>સદરહું માંગણીવાળી જમીનની ૨૦૦ મીટરની ત્રિજ્યામાં અન્ય કોઈ કુવો આવેલ છે કે કેમ? તે બાબતની ખરાઈ ગામ તલાટી/સર્કલ ઓફીસર પાસે કરાવવાની થાય છે.જે જાણ થવા વિનંતી.</li></ul>`;
-const b1=`સદરહું માંગણીવાળો વિસ્તાર મોજે-${k("gvillage")} તા.માંડવીના સરકારી ${k("gov")}નો ${k("area")} થાય છે.`,
-b2=`સદરહું વિસ્તાર અત્રેના ડી.એસ.ઓ.રેકર્ડ ${k("gov")}ની માં તળાવ,ડેમ,નદી,નાળા કે વહેણ પૈકીની નથી છતા સંબંધિત ખાતા પાસેથી ઈલાયદો અહેવાલ મેળવવાનો રહેશે.`,
-b3=`સદરહું વિસ્તાર અત્રેના ડી.એસ.ઓ.રેકર્ડે નવા ${k("gov")} ગૌચર પૈકી કે જંગલ ખાતાને તબદીલ થયા પૈકીની બાબતે કોઈ નોંધ થયેલ નથી તેમ છતા સંબંધિત ખાતા પાસેથી ઈલાયદો અહેવાલ મેળવી ROR રેકર્ડે ખાત્રી કરી અધિકાર પરત્વેની કાર્યવાહી થવા વિનંતી.`;
-const P1=`<div class="page">${head}<div class="row"><span>નંબર:ડી.એસ.ઓ./એમ.આર.નં.મા.ક.${k("reg")}</span><span>તા: ${k("date")}</span></div><br>પ્રતિ,<br>મામલતદારશ્રી<br>માંડવી-કચ્છ<div class="vs">વિષય : મોજે-${k("village")},તા-માંડવી-કચ્છના ${k("own")} જમીન પીયત કરવા માટે મોજે-${k("gvillage")} તા-માંડવીના સરકારી ${k("gov")}ની જમીનમાંથી ${k("area")} કૂવા તથા ધોરીયાના હેતુ મળવા બાબત.<br>${k("a1")} તા-માંડવી કચ્છ.<br>સંદર્ભ :(૧)આપશ્રીના પત્રનં.${k("lno")} તા: ${k("ldt")}.<br>(૨)સર્વેયરશ્રી નો તા-${k("sd")} નો અહેવાલ<br>(૩)સી. સર્વેયરશ્રીની રજુ થયેલ નોંધ.</div><div class="pad">${intro}તથા સંદર્ભ (૩) થી રેકર્ડ ચકાસણી થયેલ છે જેની સદર બાબતે માપણીશીટ તથા સંદર્ભ(૧)થી(૩) ની વિગતે નીચે મુજબ અભિપ્રાય થાય છે.</div>${L(b1,b2,b3)}<br>બિડાણ: માપણીશીટની નકલ અસલ પ્રકરણ સાથે<div class="sig">(કે.વી.દોશી )<br>જમીન દફતર નિરીક્ષક<br>માંડવી-કચ્છ.</div><br>નકલ રવાના: ${k("a1")} તા-માંડવી કચ્છ.તરફ જાણ થવા માટે</div>`;
-const P2=`<div class="page"><br>સાદર રજુ,<br>${vs(k("a1")+" તા-માંડવી")}<div class="pad">${intro}જેની રેકર્ડે ચકાસણી કરતાં નીચે મુજબની વિગત થાય છે.</div>${L(b1,b2.replace("નથી છતા","નથી તો"),b3.replace("તેમ છતા","તો"))}<br><div class="pad">આમ ઉક્ત મુજબ અત્રેના રેકર્ડ આધારે હકીકત છે.અહેવાલ મુસદ્દા સામેલ છે.મંજુર થયેથી મોકલીએ તેમ છતાં યોગ્ય થઈ આદેશ અર્થે રજુ.</div><br><br><div class="row"><div class="sig" style="margin:0">(એ.બી. સુથાર )<br>સિનિયર સર્વેયર<br>જમીન દફતર નિરીક્ષકની કચેરી<br>માંડવી-કચ્છ</div><div class="sig" style="margin:0">(કે.વી.દોશી )<br>જમીન દફતર નિરીક્ષક<br>માંડવી-કચ્છ</div></div></div>`;
+const B=(c,a,h)=>`<div class="p ${c}" ${a}>${h}</div>`,G=B("gap","","");
+const V=k("village"),GV=k("gvillage"),OWN=k("own"),GOV=k("gov"),AREA=k("area"),A1=k("a1"),LNO=k("lno"),LDT=k("ldt"),SD=k("sd"),REG=k("reg"),DT=k("date");
+const head=B("t","data-a=c data-sz=48 data-b=1","જમીન દફતર નિરીક્ષકની કચેરી,માંડવી")+B("ad","data-a=c data-sz=26","પ્રથમ માળ,મામલતદાર કચેરી,માંડવી મુ.માંડવી,જિ.કચ્છ-૩૬૦૪૬૫")+B("em","data-a=c data-col=0563C1 data-u=1","e-mail :- ilr-mandvi-kut@gujarat.gov.in")+B("rule","data-rule=1","");
+const vs=(a,third)=>B("","data-l=16",`વિષય : મોજે-${V},તા-માંડવી-કચ્છના ${OWN} જમીન પીયત કરવા માટે`)+B("","data-l=23",`મોજે-${GV} તા-માંડવીના સરકારી ${GOV}ની જમીનમાંથી ${AREA}`)+B("","data-l=23","કૂવા તથા ધોરીયાના હેતુ મળવા બાબત.")+B("","data-l=23",a)+B("","data-l=16",`સંદર્ભ :(૧)આપશ્રીના પત્રનં.${LNO} તા: ${LDT}.`)+B("","data-l=21",`(૨)સર્વેયરશ્રી નો તા-${SD} નો અહેવાલ`)+(third?B("","data-l=21","(૩)સી. સર્વેયરશ્રીની રજુ થયેલ નોંધ."):"");
+const intro=`સવિનય ઉપરોક્ત વિષય પરત્વે જણાવવાનું કે મોજે-${V},તા-માંડવી-કચ્છના ${OWN} જમીન પીયત કરવા માટે મોજે-${GV} તા-માંડવીના સરકારી ${GOV}ની જમીનમાંથી ${AREA} તથા ધોરીયાના હેતુ મળવા બાબતે સંદર્ભ(૧)થી અહેવાલ માગેલ જે બાબતે અરજદારશ્રી દ્વારા અત્રેની કચેરીએ માપણી ફી ભરતાં કેસ અત્રેના માપણી રજીસ્ટર ક્રમાંક ${REG} થી નોંધણી કરી સર્વેયરશ્રી એસ.પી.જોષીને માપણી માટે ફાળવણી કરવામાં આવેલ જેમાં સર્વેયરશ્રીએ સર્કલ ઓફિસરશ્રી દ્વારા સુચિત કરેલ જગ્યાની અરજદારશ્રીની હાજરીમાં માપણી કરેલ જે માપણીશીટ તથા અહેવાલ સંદર્ભ (૨)થી રજૂ કરેલ છે `;
+const li=t=>B("","data-a=j data-l=10.5 data-h=3.5",`<span class="bu" contenteditable="false">•</span>${t}`);
+const b1=`સદરહું માંગણીવાળો વિસ્તાર મોજે-${GV} તા.માંડવીના સરકારી ${GOV}નો ${AREA} થાય છે.`,
+b2=`સદરહું વિસ્તાર અત્રેના ડી.એસ.ઓ.રેકર્ડ ${GOV}ની માં તળાવ,ડેમ,નદી,નાળા કે વહેણ પૈકીની નથી છતા સંબંધિત ખાતા પાસેથી ઈલાયદો અહેવાલ મેળવવાનો રહેશે.`,
+b3=`સદરહું વિસ્તાર અત્રેના ડી.એસ.ઓ.રેકર્ડે નવા ${GOV} ગૌચર પૈકી કે જંગલ ખાતાને તબદીલ થયા પૈકીની બાબતે કોઈ નોંધ થયેલ નથી તેમ છતા સંબંધિત ખાતા પાસેથી ઈલાયદો અહેવાલ મેળવી ROR રેકર્ડે ખાત્રી કરી અધિકાર પરત્વેની કાર્યવાહી થવા વિનંતી.`,
+b4="સદરહું માંગણીવાળી જમીનની ૨૦૦ મીટરની ત્રિજ્યામાં અન્ય કોઈ કુવો આવેલ છે કે કેમ? તે બાબતની ખરાઈ ગામ તલાટી/સર્કલ ઓફીસર પાસે કરાવવાની થાય છે.જે જાણ થવા વિનંતી.";
+const P1=`<div class="page">${head}`+B("row",'data-tabs=right:94 data-rp=6',`<div class="cell">નંબર:ડી.એસ.ઓ./એમ.આર.નં.મા.ક.${REG}</div><div class="cell">તા: ${DT}</div>`)+G+B("","","પ્રતિ,<br>મામલતદારશ્રી<br>માંડવી-કચ્છ")+G+vs(`${A1} તા-માંડવી કચ્છ.`,1)+G+B("","data-a=j data-f=12",intro+"તથા સંદર્ભ (૩) થી રેકર્ડ ચકાસણી થયેલ છે જેની સદર બાબતે માપણીશીટ તથા સંદર્ભ(૧)થી(૩) ની વિગતે નીચે મુજબ અભિપ્રાય થાય છે.")+G+li(b1)+li(b2)+li(b3)+li(b4)+G+G+B("","","બિડાણ: માપણીશીટની નકલ અસલ પ્રકરણ સાથે")+B("","data-a=c data-l=74","(કે.વી.દોશી )<br>જમીન દફતર નિરીક્ષક<br>માંડવી-કચ્છ.")+G+B("","",`નકલ રવાના: ${A1} તા-માંડવી કચ્છ.તરફ જાણ થવા માટે`)+`</div>`;
+const P2=`<div class="page">`+B("","","સાદર રજુ,")+G+G+vs(`${A1} તા-માંડવી`,0)+G+B("","data-a=j data-f=12",intro+"જેની રેકર્ડે ચકાસણી કરતાં નીચે મુજબની વિગત થાય છે.")+li(b1)+li(b2.replace("નથી છતા","નથી તો"))+li(b3.replace("તેમ છતા","તો"))+li(b4)+G+G+G+B("","data-a=j data-f=7","આમ ઉક્ત મુજબ અત્રેના રેકર્ડ આધારે હકીકત છે.અહેવાલ મુસદ્દા સામેલ છે.મંજુર થયેથી મોકલીએ તેમ છતાં યોગ્ય થઈ આદેશ અર્થે રજુ.")+G+G+G+B("row","data-a=c data-tabs=center:16,center:88",`<div class="cell" data-w=32>(એ.બી. સુથાર )<br>સિનિયર સર્વેયર<br>જમીન દફતર નિરીક્ષકની કચેરી<br>માંડવી-કચ્છ</div><div class="cell" data-w=24>(કે.વી.દોશી )<br>જમીન દફતર નિરીક્ષક<br>માંડવી-કચ્છ</div>`)+`</div>`;
 const doc=document.getElementById("doc");doc.innerHTML=P1+P2;
-// fix: vs() opens a div; close handled below
-const form=document.getElementById("form");
-F.forEach(f=>{form.insertAdjacentHTML("beforeend",`<label>${f[1]}</label><input id="i_${f[0]}">`)});
-function paint(skip){document.querySelectorAll("[data-k]").forEach(e=>{if(e!==skip&&e.textContent!==S[e.dataset.k])e.textContent=S[e.dataset.k]});F.forEach(f=>{const i=document.getElementById("i_"+f[0]);if(i!==document.activeElement)i.value=S[f[0]]});try{localStorage.setItem("ll",JSON.stringify(S))}catch(e){}}
-F.forEach(f=>{const i=document.getElementById("i_"+f[0]);i.oninput=()=>{S[f[0]]=i.value;paint()};i.onblur=()=>{if(f[3]){S[f[0]]=g(i.value);i.value=S[f[0]];paint()}}});
-doc.addEventListener("input",e=>{const s=e.target.closest("[data-k]");if(s){S[s.dataset.k]=s.textContent;paint(s)}});
-document.querySelectorAll("#doc [data-k]").forEach(s=>s.addEventListener("blur",()=>{const f=F.find(x=>x[0]==s.dataset.k);if(f[3]){S[f[0]]=g(s.textContent);paint()}}));
-doc.querySelectorAll(".page").forEach(p=>{});
+doc.querySelectorAll(".p,.cell").forEach(b=>{const d=b.dataset,s=b.style;
+ if(d.a)s.textAlign={c:"center",j:"justify",r:"right"}[d.a]||"left";
+ if(d.l)s.marginLeft=d.l+"%";if(d.h)s.textIndent="-"+d.h+"%";else if(d.f)s.textIndent=d.f+"%";
+ if(d.rp)s.paddingRight=d.rp+"%";if(d.w)s.width=d.w+"%";if(d.sz)s.fontSize=d.sz/2+"pt";if(d.b)s.fontWeight=700;});
 doc.contentEditable="true";
+const form=document.getElementById("form");
+F.forEach(f=>form.insertAdjacentHTML("beforeend",`<label>${f[1]}</label><input id="i_${f[0]}">`));
+function paint(skip){doc.querySelectorAll("[data-k]").forEach(e=>{if(e!==skip&&e.textContent!==S[e.dataset.k])e.textContent=S[e.dataset.k]});F.forEach(f=>{const i=document.getElementById("i_"+f[0]);if(i!==document.activeElement)i.value=S[f[0]]});try{localStorage.setItem("ll",JSON.stringify(S))}catch(e){}}
+F.forEach(f=>{const i=document.getElementById("i_"+f[0]);i.oninput=()=>{S[f[0]]=i.value;paint()};i.onblur=()=>{if(f[3]){S[f[0]]=g(i.value);i.value=S[f[0]];paint()}}});
+doc.addEventListener("input",e=>{const s=e.target.closest&&e.target.closest("[data-k]");if(s){S[s.dataset.k]=s.textContent;paint(s)}});
+doc.querySelectorAll("[data-k]").forEach(s=>s.addEventListener("blur",()=>{const f=F.find(x=>x[0]==s.dataset.k);if(f[3]){S[f[0]]=g(s.textContent);paint()}}));
 function reset(){S={...D};paint()}
-function dl(){const c=doc.cloneNode(true);c.querySelectorAll("[contenteditable]").forEach(e=>e.removeAttribute("contenteditable"));c.removeAttribute("contenteditable");c.querySelectorAll("span[data-k]").forEach(e=>e.removeAttribute("style"));
-const h=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>body{font-family:Shruti,"Nirmala UI",sans-serif;font-size:13pt}.c{text-align:center}.t{font-size:22pt;font-weight:bold}.page{page-break-after:always}.sig{text-align:center}</style></head><body>${c.innerHTML.replace(/background:[^;"]*;?/g,"")}</body></html>`;
-const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff",h],{type:"application/msword"}));a.download="letter.doc";a.click()}
+/* ---- real .docx writer (no libraries) ---- */
+const E=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function L(n,rp){const o=[""];(function w(n){n.childNodes.forEach(c=>{if(c.nodeType==3){if(c.textContent)o[o.length-1]+=`<w:r>${rp}<w:t xml:space="preserve">${E(c.textContent)}</w:t></w:r>`}else if(c.tagName=="BR")o.push("");else if(c.classList.contains("bu"))o[o.length-1]+=`<w:r>${rp}<w:t>•</w:t></w:r><w:r>${rp}<w:tab/></w:r>`;else{if(c.tagName=="DIV"&&o[o.length-1])o.push("");w(c)}})})(n);return o}
+function para(b,first){const d=b.dataset,p=x=>Math.round(x*100),sz=d.sz||24;
+ const rp=`<w:rPr><w:rFonts w:ascii="Shruti" w:hAnsi="Shruti" w:cs="Shruti"/>${d.b?"<w:b/><w:bCs/>":""}${d.col?`<w:color w:val="${d.col}"/>`:""}<w:sz w:val="${sz}"/><w:szCs w:val="${sz}"/>${d.u?'<w:u w:val="single"/>':""}</w:rPr>`;
+ const cells=[...b.querySelectorAll(":scope>.cell")],tabs=(d.tabs||"").split(",").filter(Boolean);
+ const ind=`<w:ind w:left="${p(d.l||0)}" w:right="${p(d.rp||0)}"${d.h?` w:hanging="${p(d.h)}"`:d.f?` w:firstLine="${p(d.f)}"`:""}/>`;
+ const pp=pb=>`<w:pPr>${pb?"<w:pageBreakBefore/>":""}${d.rule?'<w:pBdr><w:bottom w:val="double" w:sz="6" w:space="1" w:color="000000"/></w:pBdr>':""}${tabs.length?`<w:tabs>${tabs.map(t=>{const[v,x]=t.split(":");return`<w:tab w:val="${v}" w:pos="${p(x)}"/>`}).join("")}</w:tabs>`:""}<w:spacing w:before="0" w:after="${d.rule?160:0}" w:line="${d.rule?120:320}" w:lineRule="auto"/>${ind}${cells.length?"":`<w:jc w:val="${{c:"center",j:"both",r:"right"}[d.a]||"left"}"/>`}${rp}</w:pPr>`;
+ const T=`<w:r>${rp}<w:tab/></w:r>`;
+ if(cells.length){const cl=cells.map(c=>L(c,rp)),n=Math.max(...cl.map(a=>a.length));let o="";for(let i=0;i<n;i++){let r=tabs.length==cells.length?T:"";cl.forEach((a,j)=>{if(j)r+=T;r+=a[i]||""});o+=`<w:p>${pp(first&&!i)}${r}</w:p>`}return o}
+ return`<w:p>${pp(first)}${L(b,rp).join(`<w:r>${rp}<w:br/></w:r>`)}</w:p>`}
+function crc(b){const t=crc.t||(crc.t=[...Array(256)].map((_,n)=>{let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;return c>>>0}));let r=-1;for(const x of b)r=t[(r^x)&255]^(r>>>8);return(r^-1)>>>0}
+function zip(files){const te=new TextEncoder(),parts=[],cd=[],u16=n=>[n&255,n>>8&255],u32=n=>[n&255,n>>8&255,n>>16&255,n>>24&255];let off=0;
+ for(const[n,t]of files){const nb=te.encode(n),d=te.encode(t),c=crc(d),m=[...u16(20),...u16(0x800),...u16(0),...u16(0),...u16(0x21),...u32(c),...u32(d.length),...u32(d.length),...u16(nb.length),...u16(0)];
+  const lh=new Uint8Array([0x50,0x4b,3,4,...m,...nb]);parts.push(lh,d);
+  cd.push(new Uint8Array([0x50,0x4b,1,2,...u16(20),...m.slice(0,2),...m.slice(2),...u16(0),...u16(0),...u16(0),...u32(0),...u32(off),...nb]));off+=lh.length+d.length}
+ const cs=cd.reduce((a,x)=>a+x.length,0),end=new Uint8Array([0x50,0x4b,5,6,0,0,0,0,...u16(files.length),...u16(files.length),...u32(cs),...u32(off),0,0]);
+ return new Blob([...parts,...cd,end],{type:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"})}
+function dl(){let x="";doc.querySelectorAll(".page").forEach((pg,i)=>pg.querySelectorAll(":scope>.p").forEach((b,j)=>x+=para(b,i&&!j)));
+ const ns='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"',H='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',R="http://schemas.openxmlformats.org/officeDocument/2006/relationships",PR='xmlns="http://schemas.openxmlformats.org/package/2006/relationships"';
+ const z=zip([["[Content_Types].xml",H+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>'],
+ ["_rels/.rels",H+`<Relationships ${PR}><Relationship Id="rId1" Type="${R}/officeDocument" Target="word/document.xml"/></Relationships>`],
+ ["word/_rels/document.xml.rels",H+`<Relationships ${PR}><Relationship Id="rId1" Type="${R}/styles" Target="styles.xml"/></Relationships>`],
+ ["word/styles.xml",H+`<w:styles ${ns}><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Shruti" w:hAnsi="Shruti" w:cs="Shruti"/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>`],
+ ["word/document.xml",H+`<w:document ${ns}><w:body>${x}<w:sectPr><w:pgSz w:w="12240" w:h="20160"/><w:pgMar w:top="1100" w:right="1120" w:bottom="600" w:left="1120" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr></w:body></w:document>`]]);
+ const a=document.createElement("a");a.href=URL.createObjectURL(z);a.download="letter.docx";a.click()}
 paint();
 </script></body></html>
