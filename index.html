@@ -8,8 +8,8 @@
 .app{display:flex;gap:16px;padding:16px;align-items:flex-start}
 .panel{width:330px;flex:none;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
 h1{font-size:17px;margin:0 0 12px}label{display:block;font-size:12px;margin:10px 0 3px;opacity:.8}
-input{width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:transparent;color:inherit;font:15px "Noto Sans Gujarati",Shruti,sans-serif}
-.btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+input,select{width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:transparent;color:inherit;font:15px "Noto Sans Gujarati",Shruti,sans-serif}
+select option{color:#000}.btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 button{flex:1;padding:10px;border:0;border-radius:8px;background:var(--ac);color:#fff;font-size:14px;cursor:pointer}
 button.s{background:transparent;color:var(--tx);border:1px solid var(--bd)}
 .hint{font-size:12px;opacity:.7;margin-top:10px;line-height:1.5}
@@ -32,7 +32,7 @@ span[data-k]{background:#fff6b8;border-radius:3px}
 <div class="hint">• અહીં ભરો કે જમણી બાજુ પીળા ભાગમાં સીધું લખો, બધે આપોઆપ બદલાશે.<br>• બાકીનું લખાણ પણ ક્લિક કરી સીધું એડિટ કરી શકાય.<br>• PDF: Print વિન્ડોમાં "Save as PDF" (પેપર: Legal) પસંદ કરો.<br>• તારીખ/નંબરના અંકો આપોઆપ ગુજરાતી થશે.</div></div>
 <div class="pages" id="doc"></div></div>
 <script>
-const F=[["date","તારીખ (પત્રની)","૦૯/૦૯/૨૦૨૬",1],["reg","માપણી રજીસ્ટર ક્રમાંક","૦૧/ILR/૦૧/૦૪/૨૦૨૫-૨૬",1],["village","અરજદારનું ગામ (મોજે)","ડોણ"],["gvillage","સરકારી જમીનનું ગામ (મોજે)","ડોણ"],["own","અરજદારનો સ.નં.","સ.નં.૫૨૨"],["gov","સરકારી સ.નં.","સ.નં.૪૫૦/પૈકી"],["area","ક્ષેત્રફળ","એ.૦.૦૨ ગું."],["a1","અરજદારનું નામ અને સરનામું","રાયમા રજાક જુસબ રહે. ડોણ"],["lno","આપશ્રીના પત્ર નં.","MKMO/0010/05/2026/2438"],["ldt","પત્રની તારીખ","૨૬/૦૬/૨૦૨૬",1],["sd","સર્વેયરશ્રીના અહેવાલની તારીખ","૦૪/૦૮/૨૦૨૬",1]];
+const F=[["date","તારીખ (પત્રની)","૦૯/૦૯/૨૦૨૬",1],["reg","માપણી રજીસ્ટર ક્રમાંક","૦૧/ILR/૦૧/૦૪/૨૦૨૫-૨૬",1],["village","અરજદારનું ગામ (મોજે)","ડોણ"],["gvillage","સરકારી જમીનનું ગામ (મોજે)","ડોણ"],["own","અરજદારનો સ.નં.","સ.નં.૫૨૨"],["gov","સરકારી સ.નં.","સ.નં.૪૫૦/પૈકી"],["area","ક્ષેત્રફળ","એ.૦.૦૨ ગું."],["a1","અરજદારનું નામ અને સરનામું","રાયમા રજાક જુસબ રહે. ડોણ"],["lno","આપશ્રીના પત્ર નં.","MKMO/0010/05/2026/2438"],["ldt","પત્રની તારીખ","૨૬/૦૬/૨૦૨૬",1],["sd","સર્વેયરશ્રીના અહેવાલની તારીખ","૦૪/૦૮/૨૦૨૬",1],["sv","સહી: સિનિયર સર્વેયર","એ.બી. સુથાર",0,["એ.બી. સુથાર","એસ.કે.નકુમ"]]];
 const D={};F.forEach(f=>D[f[0]]=f[2]);let S={...D};
 try{const o=JSON.parse(localStorage.getItem("ll")||"{}");F.forEach(f=>{if(o[f[0]])S[f[0]]=o[f[0]]})}catch(e){}
 const g=s=>s.replace(/[0-9]/g,d=>"૦૧૨૩૪૫૬૭૮૯"[d]);
@@ -44,11 +44,11 @@ const vs=(a,third)=>B("","data-l=16",`વિષય : મોજે-${V},તા-�
 const intro=`સવિનય ઉપરોક્ત વિષય પરત્વે જણાવવાનું કે મોજે-${V},તા-માંડવી-કચ્છના ${OWN} જમીન પીયત કરવા માટે મોજે-${GV} તા-માંડવીના સરકારી ${GOV}ની જમીનમાંથી ${AREA} તથા ધોરીયાના હેતુ મળવા બાબતે સંદર્ભ(૧)થી અહેવાલ માગેલ જે બાબતે અરજદારશ્રી દ્વારા અત્રેની કચેરીએ માપણી ફી ભરતાં કેસ અત્રેના માપણી રજીસ્ટર ક્રમાંક ${REG} થી નોંધણી કરી સર્વેયરશ્રી એસ.પી.જોષીને માપણી માટે ફાળવણી કરવામાં આવેલ જેમાં સર્વેયરશ્રીએ સર્કલ ઓફિસરશ્રી દ્વારા સુચિત કરેલ જગ્યાની અરજદારશ્રીની હાજરીમાં માપણી કરેલ જે માપણીશીટ તથા અહેવાલ સંદર્ભ (૨)થી રજૂ કરેલ છે `;
 const li=t=>B("","data-a=j data-l=10.5 data-h=3.5",`<span class="bu" contenteditable="false">•</span>${t}`);
 const b1=`સદરહું માંગણીવાળો વિસ્તાર મોજે-${GV} તા.માંડવીના સરકારી ${GOV}નો ${AREA} થાય છે.`,
-b2=`સદરહું વિસ્તાર અત્રેના ડી.એસ.ઓ.રેકર્ડ ${GOV}ની માં તળાવ,ડેમ,નદી,નાળા કે વહેણ પૈકીની નથી છતા સંબંધિત ખાતા પાસેથી ઈલાયદો અહેવાલ મેળવવાનો રહેશે.`,
+b2=`સદરહું વિસ્તાર અત્રેના ડી.એસ.ઓ.રેકર્ડ ${GOV}ની માં તળાવ,ડેમ,નદી,નાળા કે વહેણ પૈકીની નથી તેમ છતા સંબંધિત ખાતા પાસેથી ઈલાયદો અહેવાલ મેળવવાનો રહેશે.`,
 b3=`સદરહું વિસ્તાર અત્રેના ડી.એસ.ઓ.રેકર્ડે નવા ${GOV} ગૌચર પૈકી કે જંગલ ખાતાને તબદીલ થયા પૈકીની બાબતે કોઈ નોંધ થયેલ નથી તેમ છતા સંબંધિત ખાતા પાસેથી ઈલાયદો અહેવાલ મેળવી ROR રેકર્ડે ખાત્રી કરી અધિકાર પરત્વેની કાર્યવાહી થવા વિનંતી.`,
 b4="સદરહું માંગણીવાળી જમીનની ૨૦૦ મીટરની ત્રિજ્યામાં અન્ય કોઈ કુવો આવેલ છે કે કેમ? તે બાબતની ખરાઈ ગામ તલાટી/સર્કલ ઓફીસર પાસે કરાવવાની થાય છે.જે જાણ થવા વિનંતી.";
 const P1=`<div class="page">${head}`+B("row",'data-tabs=right:94 data-rp=6',`<div class="cell">નંબર:ડી.એસ.ઓ./એમ.આર.નં.મા.ક.${REG}</div><div class="cell">તા: ${DT}</div>`)+G+B("","","પ્રતિ,<br>મામલતદારશ્રી<br>માંડવી-કચ્છ")+G+vs(`${A1} તા-માંડવી કચ્છ.`,1)+G+B("","data-a=j data-f=12",intro+"તથા સંદર્ભ (૩) થી રેકર્ડ ચકાસણી થયેલ છે જેની સદર બાબતે માપણીશીટ તથા સંદર્ભ(૧)થી(૩) ની વિગતે નીચે મુજબ અભિપ્રાય થાય છે.")+G+li(b1)+li(b2)+li(b3)+li(b4)+G+G+B("","","બિડાણ: માપણીશીટની નકલ અસલ પ્રકરણ સાથે")+B("","data-a=c data-l=74","(કે.વી.દોશી )<br>જમીન દફતર નિરીક્ષક<br>માંડવી-કચ્છ.")+G+B("","",`નકલ રવાના: ${A1} તા-માંડવી કચ્છ.તરફ જાણ થવા માટે`)+`</div>`;
-const P2=`<div class="page">`+B("","","સાદર રજુ,")+G+G+vs(`${A1} તા-માંડવી`,0)+G+B("","data-a=j data-f=12",intro+"જેની રેકર્ડે ચકાસણી કરતાં નીચે મુજબની વિગત થાય છે.")+li(b1)+li(b2.replace("નથી છતા","નથી તો"))+li(b3.replace("તેમ છતા","તો"))+li(b4)+G+G+G+B("","data-a=j data-f=7","આમ ઉક્ત મુજબ અત્રેના રેકર્ડ આધારે હકીકત છે.અહેવાલ મુસદ્દા સામેલ છે.મંજુર થયેથી મોકલીએ તેમ છતાં યોગ્ય થઈ આદેશ અર્થે રજુ.")+G+G+G+B("row","data-a=c data-tabs=center:16,center:88",`<div class="cell" data-w=32>(એ.બી. સુથાર )<br>સિનિયર સર્વેયર<br>જમીન દફતર નિરીક્ષકની કચેરી<br>માંડવી-કચ્છ</div><div class="cell" data-w=24>(કે.વી.દોશી )<br>જમીન દફતર નિરીક્ષક<br>માંડવી-કચ્છ</div>`)+`</div>`;
+const P2=`<div class="page">`+B("","","સાદર રજુ,")+G+G+vs(`${A1} તા-માંડવી`,0)+G+B("","data-a=j data-f=12",intro+"જેની રેકર્ડે ચકાસણી કરતાં નીચે મુજબની વિગત થાય છે.")+li(b1)+li(b2)+li(b3)+li(b4)+G+G+G+B("","data-a=j data-f=7","આમ ઉક્ત મુજબ અત્રેના રેકર્ડ આધારે હકીકત છે.અહેવાલ મુસદ્દા સામેલ છે.મંજુર થયેથી મોકલીએ તેમ છતાં યોગ્ય થઈ આદેશ અર્થે રજુ.")+G+G+G+B("row","data-a=c data-tabs=center:16,center:88",`<div class="cell" data-w=32>(${k("sv")} )<br>સિનિયર સર્વેયર<br>જમીન દફતર નિરીક્ષકની કચેરી<br>માંડવી-કચ્છ</div><div class="cell" data-w=24>(કે.વી.દોશી )<br>જમીન દફતર નિરીક્ષક<br>માંડવી-કચ્છ</div>`)+`</div>`;
 const doc=document.getElementById("doc");doc.innerHTML=P1+P2;
 doc.querySelectorAll(".p,.cell").forEach(b=>{const d=b.dataset,s=b.style;
  if(d.a)s.textAlign={c:"center",j:"justify",r:"right"}[d.a]||"left";
@@ -56,7 +56,7 @@ doc.querySelectorAll(".p,.cell").forEach(b=>{const d=b.dataset,s=b.style;
  if(d.rp)s.paddingRight=d.rp+"%";if(d.w)s.width=d.w+"%";if(d.sz)s.fontSize=d.sz/2+"pt";if(d.b)s.fontWeight=700;});
 doc.contentEditable="true";
 const form=document.getElementById("form");
-F.forEach(f=>form.insertAdjacentHTML("beforeend",`<label>${f[1]}</label><input id="i_${f[0]}">`));
+F.forEach(f=>form.insertAdjacentHTML("beforeend",`<label>${f[1]}</label>`+(f[4]?`<select id="i_${f[0]}">${f[4].map(o=>`<option>${o}</option>`).join("")}</select>`:`<input id="i_${f[0]}">`)));
 function paint(skip){doc.querySelectorAll("[data-k]").forEach(e=>{if(e!==skip&&e.textContent!==S[e.dataset.k])e.textContent=S[e.dataset.k]});F.forEach(f=>{const i=document.getElementById("i_"+f[0]);if(i!==document.activeElement)i.value=S[f[0]]});try{localStorage.setItem("ll",JSON.stringify(S))}catch(e){}}
 F.forEach(f=>{const i=document.getElementById("i_"+f[0]);i.oninput=()=>{S[f[0]]=i.value;paint()};i.onblur=()=>{if(f[3]){S[f[0]]=g(i.value);i.value=S[f[0]];paint()}}});
 doc.addEventListener("input",e=>{const s=e.target.closest&&e.target.closest("[data-k]");if(s){S[s.dataset.k]=s.textContent;paint(s)}});
