@@ -28,7 +28,7 @@ span[data-k]{background:#fff6b8;border-radius:3px}
 </style></head><body>
 <div class="app">
 <div class="panel"><h1>ફેરફાર થતી વિગતો</h1><div id="form"></div>
-<div class="btns"><button onclick="dl()">Word ડાઉનલોડ</button><button onclick="print()">PDF ડાઉનલોડ</button><button class="s" onclick="reset()">ડિફોલ્ટ</button></div>
+<div class="btns"><button onclick="dl()">Word (.docx)</button><button onclick="dldoc()">Word (.doc)</button><button onclick="print()">PDF ડાઉનલોડ</button><button class="s" onclick="reset()">ડિફોલ્ટ</button></div>
 <div class="hint">• અહીં ભરો કે જમણી બાજુ પીળા ભાગમાં સીધું લખો, બધે આપોઆપ બદલાશે.<br>• બાકીનું લખાણ પણ ક્લિક કરી સીધું એડિટ કરી શકાય.<br>• PDF: Print વિન્ડોમાં "Save as PDF" (પેપર: Legal) પસંદ કરો.<br>• તારીખ/નંબરના અંકો આપોઆપ ગુજરાતી થશે.</div></div>
 <div class="pages" id="doc"></div></div>
 <script>
@@ -88,5 +88,16 @@ function dl(){let x="";doc.querySelectorAll(".page").forEach((pg,i)=>pg.querySel
  ["word/styles.xml",H+`<w:styles ${ns}><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Shruti" w:hAnsi="Shruti" w:cs="Shruti"/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>`],
  ["word/document.xml",H+`<w:document ${ns}><w:body>${x}<w:sectPr><w:pgSz w:w="12240" w:h="20160"/><w:pgMar w:top="1100" w:right="1120" w:bottom="600" w:left="1120" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr></w:body></w:document>`]]);
  const a=document.createElement("a");a.href=URL.createObjectURL(z);a.download="letter.docx";a.click()}
+function dldoc(){const I=x=>(x*0.06936).toFixed(3)+"in",pgs=[];
+ doc.querySelectorAll(".page").forEach(pg=>{let h="";pg.querySelectorAll(":scope>.p").forEach(b=>{const d=b.dataset,cells=[...b.querySelectorAll(":scope>.cell")];
+  const cl=n=>n.innerHTML.replace(/ contenteditable="[^"]*"/g,"").replace(/<span class="bu"[^>]*>•<\/span>/g,"•&nbsp;&nbsp;");
+  const fs=(d.sz||24)/2+"pt",base=`font-family:Shruti,'Nirmala UI';font-size:${fs};line-height:140%;mso-margin-top-alt:0;mso-margin-bottom-alt:0;${d.b?"font-weight:bold;":""}${d.col?"color:#"+d.col+";":""}${d.u?"text-decoration:underline;":""}`;
+  if(d.rule){h+=`<p style="margin:0 0 6pt 0;border-bottom:3pt double #000;font-size:2pt;line-height:100%">&nbsp;</p>`;return}
+  if(cells.length){const W=cells.length==2&&d.tabs.startsWith("right")?[70,30]:[32,44,24];
+   h+=`<table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse"><tr>${W.map((w,i)=>{const c=cells.length==2&&W.length==2?cells[i]:(i==1?null:cells[i>1?1:0]);return`<td width="${w}%" valign="top" style="${base}text-align:${W.length==2?(i?"right":"left"):"center"};${W.length==2&&i?"padding-right:6%":""}">${c?cl(c):"&nbsp;"}</td>`}).join("")}</tr></table>`;return}
+  if(!b.textContent.trim()){h+=`<p style="margin:0;${base}">&nbsp;</p>`;return}
+  h+=`<p style="margin-top:0;margin-bottom:0;margin-right:0;margin-left:${I(+d.l||0)};${d.h?"text-indent:-"+I(+d.h)+";":d.f?"text-indent:"+I(+d.f)+";":""}text-align:${{c:"center",j:"justify",r:"right"}[d.a]||"left"};${base}">${cl(b)}</p>`});pgs.push(h)});
+ const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>letter</title><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]--><style>@page Section1{size:8.5in 14in;margin:.9in .78in .5in .78in}div.Section1{page:Section1}p{margin-top:0;margin-bottom:0;mso-margin-top-alt:0;mso-margin-bottom-alt:0}table{margin:0}</style></head><body><div class="Section1">${pgs.join('<br clear="all" style="page-break-before:always">')}</div></body></html>`;
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff",html],{type:"application/msword"}));a.download="letter.doc";a.click()}
 paint();
 </script></body></html>
