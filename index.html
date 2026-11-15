@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="gu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>જમીન દફતર પત્ર જનરેટર</title>
+<style>
+:root{--bg:#f3f4f6;--card:#fff;--tx:#1f2937;--ac:#1d4ed8;--bd:#d1d5db}
+@media(prefers-color-scheme:dark){:root{--bg:#111827;--card:#1f2937;--tx:#e5e7eb;--bd:#374151}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif}
+.app{display:flex;gap:16px;padding:16px;align-items:flex-start}
+.panel{width:340px;flex:none;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+h1{font-size:17px;margin:0 0 12px}label{display:block;font-size:12px;margin:10px 0 3px;opacity:.8}
+input{width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:transparent;color:inherit;font:15px "Noto Sans Gujarati",Shruti,sans-serif}
+.btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+button{flex:1;padding:10px;border:0;border-radius:8px;background:var(--ac);color:#fff;font-size:14px;cursor:pointer}
+button.s{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+.hint{font-size:12px;opacity:.7;margin-top:10px;line-height:1.5}
+.pages{flex:1;min-width:0;overflow-x:auto}
+.page{background:#fff;color:#000;width:794px;min-height:1123px;margin:0 auto 16px;padding:50px 60px;font:15px/1.75 "Noto Sans Gujarati",Shruti,"Nirmala UI",sans-serif;box-shadow:0 2px 8px #0003}
+.page [contenteditable]:focus{outline:none}
+.c{text-align:center}.t{font-size:26px;font-weight:700;line-height:1.3}
+hr{border:0;border-top:3px double #000;margin:8px 0}
+.row{display:flex;justify-content:space-between}
+.vs{margin:14px 0 14px 90px;text-indent:-0px}.vs div{padding-left:0}
+.pad{text-align:justify;text-indent:50px}ul{margin:6px 0;padding-left:40px;text-align:justify}
+.sig{text-align:center;width:230px;margin-left:auto;line-height:1.5}
+span[data-k]{background:#fff6b8;border-radius:3px}
+@media print{body{background:#fff}.panel{display:none}.app{display:block;padding:0}.pages{overflow:visible}.page{box-shadow:none;margin:0;width:auto;page-break-after:always}span[data-k]{background:none}@page{size:A4;margin:0}}
+@media(max-width:1000px){.app{flex-direction:column}.panel{position:static;width:100%;max-height:none}}
+</style></head><body>
+<div class="app">
+<div class="panel"><h1>ફેરફાર થતી વિગતો</h1><div id="form"></div>
+<div class="btns"><button onclick="dl()">Word ડાઉનલોડ</button><button onclick="print()">PDF ડાઉનલોડ</button><button class="s" onclick="reset()">ડિફોલ્ટ</button></div>
+<div class="hint">• અહીં ભરો કે જમણી બાજુ પીળા ભાગમાં સીધું લખો, બધે આપોઆપ બદલાશે.<br>• બાકીનું લખાણ પણ ક્લિક કરી સીધું એડિટ કરી શકાય.<br>• PDF: Print વિન્ડોમાં "Save as PDF" પસંદ કરો.<br>• તારીખ/નંબરના અંકો આપોઆપ ગુજરાતી થશે.</div></div>
+<div class="pages" id="doc"></div></div>
+<script>
+const F=[["date","તારીખ (પત્રની)","૦૯/૦૯/૨૦૨૬",1],["reg","માપણી રજીસ્ટર ક્રમાંક","૦૧/ILR/૦૧/૦૪/૨૦૨૫-૨૬",1],["village","અરજદારનું ગામ (મોજે)","ડોણ"],["gvillage","સરકારી જમીનનું ગામ (મોજે)","ડોણ"],["own","અરજદારનો સ.નં.","સ.નં.૫૨૨"],["gov","સરકારી સ.નં.","સ.નં.૪૫૦/પૈકી"],["area","ક્ષેત્રફળ","એ.૦.૦૨ ગું."],["a1","અરજદારનું નામ અને સરનામું","રાયમા રજાક જુસબ રહે. ડોણ"],["lno","આપશ્રીના પત્ર નં.","MKMO/0010/05/2026/2438"],["ldt","પત્રની તારીખ","૨૬/૦૬/૨૦૨૬",1],["sd","સર્વેયરશ્રીના અહેવાલની તારીખ","૦૪/૦૮/૨૦૨૬",1]];
+const D={};F.forEach(f=>D[f[0]]=f[2]);let S={...D};
+try{Object.assign(S,JSON.parse(localStorage.getItem("ll")||"{}"))}catch(e){}
+const g=s=>s.replace(/[0-9]/g,d=>"૦૧૨૩૪૫૬૭૮૯"[d]);
+const k=n=>`<span data-k="${n}" contenteditable="true"></span>`;
+const head=`<div class="c t">જમીન દફતર નિરીક્ષકની કચેરી,માંડવી</div><div class="c">પ્રથમ માળ,મામલતદાર કચેરી,માંડવી મુ.માંડવી,જિ.કચ્છ-૩૬૦૪૬૫<br>e-mail :- ilr-mandvi-kut@gujarat.gov.in</div><hr>`;
+const vs=a=>`<div class="vs">વિષય : મોજે-${k("village")},તા-માંડવી-કચ્છના ${k("own")} જમીન પીયત કરવા માટે મોજે-${k("gvillage")} તા-માંડવીના સરકારી ${k("gov")}ની જમીનમાંથી ${k("area")} કૂવા તથા ધોરીયાના હેતુ મળવા બાબત.<br>${a}<br>સંદર્ભ :(૧)આપશ્રીના પત્રનં.${k("lno")} તા: ${k("ldt")}.<br>(૨)સર્વેયરશ્રી નો તા-${k("sd")} નો અહેવાલ</div>`;
+const intro=`સવિનય ઉપરોક્ત વિષય પરત્વે જણાવવાનું કે મોજે-${k("village")},તા-માંડવી-કચ્છના ${k("own")} જમીન પીયત કરવા માટે મોજે-${k("gvillage")} તા-માંડવીના સરકારી ${k("gov")}ની જમીનમાંથી ${k("area")} તથા ધોરીયાના હેતુ મળવા બાબતે સંદર્ભ(૧)થી અહેવાલ માગેલ જે બાબતે અરજદારશ્રી દ્વારા અત્રેની કચેરીએ માપણી ફી ભરતાં કેસ અત્રેના માપણી રજીસ્ટર ક્રમાંક ${k("reg")} થી નોંધણી કરી સર્વેયરશ્રી એસ.પી.જોષીને માપણી માટે ફાળવણી કરવામાં આવેલ જેમાં સર્વેયરશ્રીએ સર્કલ ઓફિસરશ્રી દ્વારા સુચિત કરેલ જગ્યાની અરજદારશ્રીની હાજરીમાં માપણી કરેલ જે માપણીશીટ તથા અહેવાલ સંદર્ભ (૨)થી રજૂ કરેલ છે `;
+const L=(t1,t2,t3,t4)=>`<ul><li>${t1}</li><li>${t2}</li><li>${t3}</li><li>સદરહું માંગણીવાળી જમીનની ૨૦૦ મીટરની ત્રિજ્યામાં અન્ય કોઈ કુવો આવેલ છે કે કેમ? તે બાબતની ખરાઈ ગામ તલાટી/સર્કલ ઓફીસર પાસે કરાવવાની થાય છે.જે જાણ થવા વિનંતી.</li></ul>`;
+const b1=`સદરહું માંગણીવાળો વિસ્તાર મોજે-${k("gvillage")} તા.માંડવીના સરકારી ${k("gov")}નો ${k("area")} થાય છે.`,
+b2=`સદરહું વિસ્તાર અત્રેના ડી.એસ.ઓ.રેકર્ડ ${k("gov")}ની માં તળાવ,ડેમ,નદી,નાળા કે વહેણ પૈકીની નથી છતા સંબંધિત ખાતા પાસેથી ઈલાયદો અહેવાલ મેળવવાનો રહેશે.`,
+b3=`સદરહું વિસ્તાર અત્રેના ડી.એસ.ઓ.રેકર્ડે નવા ${k("gov")} ગૌચર પૈકી કે જંગલ ખાતાને તબદીલ થયા પૈકીની બાબતે કોઈ નોંધ થયેલ નથી તેમ છતા સંબંધિત ખાતા પાસેથી ઈલાયદો અહેવાલ મેળવી ROR રેકર્ડે ખાત્રી કરી અધિકાર પરત્વેની કાર્યવાહી થવા વિનંતી.`;
+const P1=`<div class="page">${head}<div class="row"><span>નંબર:ડી.એસ.ઓ./એમ.આર.નં.મા.ક.${k("reg")}</span><span>તા: ${k("date")}</span></div><br>પ્રતિ,<br>મામલતદારશ્રી<br>માંડવી-કચ્છ<div class="vs">વિષય : મોજે-${k("village")},તા-માંડવી-કચ્છના ${k("own")} જમીન પીયત કરવા માટે મોજે-${k("gvillage")} તા-માંડવીના સરકારી ${k("gov")}ની જમીનમાંથી ${k("area")} કૂવા તથા ધોરીયાના હેતુ મળવા બાબત.<br>${k("a1")} તા-માંડવી કચ્છ.<br>સંદર્ભ :(૧)આપશ્રીના પત્રનં.${k("lno")} તા: ${k("ldt")}.<br>(૨)સર્વેયરશ્રી નો તા-${k("sd")} નો અહેવાલ<br>(૩)સી. સર્વેયરશ્રીની રજુ થયેલ નોંધ.</div><div class="pad">${intro}તથા સંદર્ભ (૩) થી રેકર્ડ ચકાસણી થયેલ છે જેની સદર બાબતે માપણીશીટ તથા સંદર્ભ(૧)થી(૩) ની વિગતે નીચે મુજબ અભિપ્રાય થાય છે.</div>${L(b1,b2,b3)}<br>બિડાણ: માપણીશીટની નકલ અસલ પ્રકરણ સાથે<div class="sig">(કે.વી.દોશી )<br>જમીન દફતર નિરીક્ષક<br>માંડવી-કચ્છ.</div><br>નકલ રવાના: ${k("a1")} તા-માંડવી કચ્છ.તરફ જાણ થવા માટે</div>`;
+const P2=`<div class="page"><br>સાદર રજુ,<br>${vs(k("a1")+" તા-માંડવી")}<div class="pad">${intro}જેની રેકર્ડે ચકાસણી કરતાં નીચે મુજબની વિગત થાય છે.</div>${L(b1,b2.replace("નથી છતા","નથી તો"),b3.replace("તેમ છતા","તો"))}<br><div class="pad">આમ ઉક્ત મુજબ અત્રેના રેકર્ડ આધારે હકીકત છે.અહેવાલ મુસદ્દા સામેલ છે.મંજુર થયેથી મોકલીએ તેમ છતાં યોગ્ય થઈ આદેશ અર્થે રજુ.</div><br><br><div class="row"><div class="sig" style="margin:0">(એ.બી. સુથાર )<br>સિનિયર સર્વેયર<br>જમીન દફતર નિરીક્ષકની કચેરી<br>માંડવી-કચ્છ</div><div class="sig" style="margin:0">(કે.વી.દોશી )<br>જમીન દફતર નિરીક્ષક<br>માંડવી-કચ્છ</div></div></div>`;
+const doc=document.getElementById("doc");doc.innerHTML=P1+P2;
+// fix: vs() opens a div; close handled below
+const form=document.getElementById("form");
+F.forEach(f=>{form.insertAdjacentHTML("beforeend",`<label>${f[1]}</label><input id="i_${f[0]}">`)});
+function paint(skip){document.querySelectorAll("[data-k]").forEach(e=>{if(e!==skip&&e.textContent!==S[e.dataset.k])e.textContent=S[e.dataset.k]});F.forEach(f=>{const i=document.getElementById("i_"+f[0]);if(i!==document.activeElement)i.value=S[f[0]]});try{localStorage.setItem("ll",JSON.stringify(S))}catch(e){}}
+F.forEach(f=>{const i=document.getElementById("i_"+f[0]);i.oninput=()=>{S[f[0]]=i.value;paint()};i.onblur=()=>{if(f[3]){S[f[0]]=g(i.value);i.value=S[f[0]];paint()}}});
+doc.addEventListener("input",e=>{const s=e.target.closest("[data-k]");if(s){S[s.dataset.k]=s.textContent;paint(s)}});
+document.querySelectorAll("#doc [data-k]").forEach(s=>s.addEventListener("blur",()=>{const f=F.find(x=>x[0]==s.dataset.k);if(f[3]){S[f[0]]=g(s.textContent);paint()}}));
+doc.querySelectorAll(".page").forEach(p=>{});
+doc.contentEditable="true";
+function reset(){S={...D};paint()}
+function dl(){const c=doc.cloneNode(true);c.querySelectorAll("[contenteditable]").forEach(e=>e.removeAttribute("contenteditable"));c.removeAttribute("contenteditable");c.querySelectorAll("span[data-k]").forEach(e=>e.removeAttribute("style"));
+const h=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>body{font-family:Shruti,"Nirmala UI",sans-serif;font-size:13pt}.c{text-align:center}.t{font-size:22pt;font-weight:bold}.page{page-break-after:always}.sig{text-align:center}</style></head><body>${c.innerHTML.replace(/background:[^;"]*;?/g,"")}</body></html>`;
+const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff",h],{type:"application/msword"}));a.download="letter.doc";a.click()}
+paint();
+</script></body></html>
